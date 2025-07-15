@@ -22,6 +22,6 @@ This is a demo React application showing:
 ### 1️⃣ Initial the project
 
 ```bash
-npm node init
+npm install
 npm start //on the backend folder
 npm run dev //on the front folder
