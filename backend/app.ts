@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/assignments", async (req, res) => {
-  await setTimeout(4000);
+  await setTimeout(5000);
   res.json(database.assignments);
 });
 
