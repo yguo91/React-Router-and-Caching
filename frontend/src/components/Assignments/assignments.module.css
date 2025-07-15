@@ -43,3 +43,9 @@
   flex-direction: column;
   gap: 12px;
 }
+
+.pendingMessage {
+  color: red;
+  font-weight: bold;
+  margin: 0.5em 0;
+}

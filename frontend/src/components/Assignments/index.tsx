@@ -1,10 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { TAssignment } from "../../interfaces";
 import { Assignment } from "../Assignment";
 import styles from "./assignments.module.css";
-import { fetchAssignments } from "../../helpers/fetcher";
+import { fetchAssignments, deleteAssignment, toggleAssignmentCompletion } from "../../helpers/fetcher";
 
 export function Assignments() {
+  const queryClient = useQueryClient();
+
   const {
     data: assignments,
     isPending,
@@ -13,18 +15,34 @@ export function Assignments() {
     queryKey: ["assignments"],
     queryFn: async () => fetchAssignments(),
   });
-  const handleDeleteButton = async (id: string) => {
-    const updatedAssignmentList = assignments?.filter(
-      (assignment) => assignment.id !== id
-    );
+  // TODO: Implement the createAssignment, deleteAssignment, and toggleAssignmentCompletion functions
+  const deleteMutation = useMutation({
+    mutationFn: deleteAssignment,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["assignments"] });
+    },  
+  });
+  const handleDeleteButton = (id: string) => {
+    deleteMutation.mutate(id);
   };
+
+  const toggleMutation = useMutation({
+    mutationFn: ({ id, complete }: { id: string; complete: boolean }) =>
+      toggleAssignmentCompletion(id, complete),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["assignments"] });
+    },
+  });
+
+
   const handleCompletedTask = (id: string, complete: boolean) => {
-    // toggle the completion state on the server
-    const updatedAssignmentList = assignments?.map((assignments) =>
-      assignments.id === id
-        ? { ...assignments, completed: complete }
-        : assignments
-    );
+    // // toggle the completion state on the server
+    // const updatedAssignmentList = assignments?.map((assignments) =>
+    //   assignments.id === id
+    //     ? { ...assignments, completed: complete }
+    //     : assignments
+    // );
+    toggleMutation.mutate({ id, complete });
   };
   const countCompletedTasks = () => {
     return assignments?.filter((assignment) => assignment.completed).length;
@@ -46,6 +64,14 @@ export function Assignments() {
         </div>
       </header>
 
+      {deleteMutation.isPending && 
+        <h3 className={styles.isPending}>
+        Deleting assignment...</h3>}
+
+      {toggleMutation.isPending && (
+        <h3 className={styles.isPending}>Toggling assignment...</h3>
+      )}
+
       <div className={styles.list}>
         {isPending ? (
           <p>Loading...</p>
@@ -64,4 +90,5 @@ export function Assignments() {
       </div>
     </section>
   );
-}
+
+}//end of Assignments component

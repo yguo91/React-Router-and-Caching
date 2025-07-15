@@ -23,16 +23,35 @@ app.post("/assignments", async (req, res) => {
   res.json({ error: false });
 });
 
-app.post("/assignments/:id/delete", async (req, res) => {
-  const id = req.params.id;
-  res.json({ test: "you hit delete" });
+app.delete("/assignments/:id", async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const index = database.assignments.findIndex(a => a.id === id);
+
+  if (index !== -1) {
+    database.assignments.splice(index, 1);
+    return res.json({ error: false });
+  }
+
+  res.status(404).json({ error: true, message: "Assignment not found" });
 });
 
 app.post("/assignments/:id/toggle", async (req, res) => {
-  const id = req.params.id;
-  console.log(id);
-  res.json({ test: "you toggled complete" });
+  const id = parseInt(req.params.id, 10);
+  const { completed } = req.body;
+
+  // Find the assignment
+  const assignment = database.assignments.find(a => a.id === id);
+
+  if (!assignment) {
+    return res.status(404).json({ error: true, message: "Assignment not found" });
+  }
+
+  // Update the completion state
+  assignment.completed = completed;
+
+  res.json({ error: false, updated: assignment });
 });
+
 
 app.listen(8000, () => {
   console.log("Backend Web Server has started 🚀");
