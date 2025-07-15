@@ -26,5 +26,5 @@ npm install
 npm start //on the backend folder
 npm run dev //on the frontend folder
 
-//in case of router cannot run errors, run in frontend
+//in case of router run errors, run in frontend
 npm install react-router
