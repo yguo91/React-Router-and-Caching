@@ -19,8 +19,9 @@ This is a demo React application showing:
 
 ## Getting Started
 
-### 1️⃣ Clone the Repository
+### 1️⃣ Initial the project
 
 ```bash
-git clone https://github.com/yourusername/react-assignment-tracker.git
-cd react-assignment-tracker
+npm node init
+npm start //on the backend folder
+npm run dev //on the front folder
