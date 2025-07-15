@@ -28,3 +28,6 @@ npm run dev //on the frontend folder
 
 //in case of router run errors, run in frontend
 npm install react-router
+
+//in case of Tanstack Query run errors, also in the frontend
+npm install @tanstack/react-query
